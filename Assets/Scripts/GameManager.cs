@@ -10,9 +10,13 @@ public class GameManager : MonoSingleton<GameManager>
     [SerializeField]
     private Stage _stage;
 
+    [SerializeField]
+    private GameOverPanel _gameOverPanel;
+
     private void OnEnable()
     {
         _player.Died += Player_Died;
+        _gameOverPanel.Clicked += GameOverPanel_Clicked;
     }
 
     private void OnDisable()
@@ -25,6 +29,13 @@ public class GameManager : MonoSingleton<GameManager>
         GameOver();
     }
 
+    protected virtual void GameOverPanel_Clicked(object sender)
+    {
+        _gameOverPanel.gameObject.SetActive(true);
+
+        GameStart();
+    }
+
     public void GameStart()
     {
         _player.transform.position = _stage.StartPoint.transform.position;
@@ -34,6 +45,6 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void GameOver()
     {
-        GameStart();
+        _gameOverPanel.gameObject.SetActive(true);
     }
 }
