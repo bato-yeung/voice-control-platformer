@@ -11,17 +11,23 @@ public class GameManager : MonoSingleton<GameManager>
     private Stage _stage;
 
     [SerializeField]
+    private SettingsPanel _settingsPanel;
+
+    [SerializeField]
     private GameOverPanel _gameOverPanel;
 
     private void OnEnable()
     {
         _player.Died += Player_Died;
+        _settingsPanel.Confirmed += SettingsPanel_Confirmed;
         _gameOverPanel.Clicked += GameOverPanel_Clicked;
     }
 
     private void OnDisable()
     {
         _player.Died -= Player_Died;
+        _settingsPanel.Confirmed -= SettingsPanel_Confirmed;
+        _gameOverPanel.Clicked -= GameOverPanel_Clicked;
     }
 
     protected virtual void Player_Died(object sender)
@@ -29,11 +35,27 @@ public class GameManager : MonoSingleton<GameManager>
         GameOver();
     }
 
-    protected virtual void GameOverPanel_Clicked(object sender)
+    protected virtual void SettingsPanel_Confirmed(object sender)
     {
-        _gameOverPanel.gameObject.SetActive(true);
+        _settingsPanel.gameObject.SetActive(false);
 
         GameStart();
+    }
+
+    protected virtual void GameOverPanel_Clicked(object sender)
+    {
+        _gameOverPanel.gameObject.SetActive(false);
+
+        GameStart();
+    }
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        _player.Die();
+
+        _settingsPanel.gameObject.SetActive(true);
     }
 
     public void GameStart()

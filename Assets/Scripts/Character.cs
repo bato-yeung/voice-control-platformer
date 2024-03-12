@@ -38,21 +38,21 @@ public class Character : MonoBehaviour
 
     private const float JumpPitchThreshold = 200f;
 
-    private void Start()
-    {
-        int length = Microphone.devices.Length;
-        for (int i = 0; i < length; i++)
-        {
-            Debug.Log($"Microphone.devices[{i}]: {Microphone.devices[i]}");
-        }
+    //private void Start()
+    //{
+    //    int length = Microphone.devices.Length;
+    //    for (int i = 0; i < length; i++)
+    //    {
+    //        Debug.Log($"Microphone.devices[{i}]: {Microphone.devices[i]}");
+    //    }
 
-        string deviceName = Microphone.devices[1];
-        _micAudioSource.clip = Microphone.Start(deviceName, true, 1, 44100);
+    //    string deviceName = Microphone.devices[1];
+    //    _micAudioSource.clip = Microphone.Start(deviceName, true, 1, 44100);
 
-        while (!(Microphone.GetPosition(deviceName) > 0)) { }
+    //    while (!(Microphone.GetPosition(deviceName) > 0)) { }
 
-        _micAudioSource.Play();
-    }
+    //    _micAudioSource.Play();
+    //}
 
     private void Update()
     {
