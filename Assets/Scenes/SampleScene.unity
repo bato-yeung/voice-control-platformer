@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 395839228}
   - component: {fileID: 395839230}
   - component: {fileID: 395839229}
+  - component: {fileID: 395839231}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -193,10 +194,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _rigidbody2D: {fileID: 395839229}
   _collisionBox: {fileID: 1868439817}
+  _animator: {fileID: 395839231}
   _moveSpeed: 2
   _jumpMagnitude: 8
   _micAudioSource: {fileID: 694240187}
   _audioPitchEstimator: {fileID: 662081909}
+--- !u!95 &395839231
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 395839227}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 4ffb1086c9abe864a84e3765950beb50, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0

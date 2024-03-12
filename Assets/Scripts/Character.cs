@@ -11,6 +11,9 @@ public class Character : MonoBehaviour
     private Collider2D _collisionBox;
 
     [SerializeField]
+    private Animator _animator;
+
+    [SerializeField]
     private float _moveSpeed = 2f; // move distance per second
 
     [SerializeField]
@@ -41,18 +44,34 @@ public class Character : MonoBehaviour
         _micAudioSource.Play();
     }
 
+    private void Update()
+    {
+        _animator.SetFloat("Abs(Velocity.x)", Mathf.Abs(_rigidbody2D.velocity.x));
+        _animator.SetFloat("Velocity.y", _rigidbody2D.velocity.y);
+        _animator.SetBool("IsGrounded", _isGrounded);
+    }
+
     private void FixedUpdate()
     {
-        //float horizontal = Input.GetAxis("Horizontal");
-
-        //if (Mathf.Abs(horizontal) > 0f)
-        //{
-        //    Vector2 velocity = _rigidbody2D.velocity;
-        //    velocity.x = Mathf.Sign(horizontal) * _moveSpeed;
-        //    _rigidbody2D.velocity = velocity;
-        //}
-
         _isGrounded = CheckGrounded();
+
+        float horizontal = Input.GetAxis("Horizontal");
+        float jump = Input.GetAxis("Jump");
+
+        if (Mathf.Abs(horizontal) > 0f)
+        {
+            Vector2 velocity = _rigidbody2D.velocity;
+            velocity.x = Mathf.Sign(horizontal) * _moveSpeed;
+            _rigidbody2D.velocity = velocity;
+        }
+
+        if (jump > 0f)
+        {
+            if (_isGrounded == true)
+            {
+                Jump(1f);
+            }
+        }
 
         float pitch = _audioPitchEstimator.Estimate(_micAudioSource);
         //Debug.Log($"pitch: {pitch}");
