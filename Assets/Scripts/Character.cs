@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Character : MonoBehaviour
@@ -11,9 +13,13 @@ public class Character : MonoBehaviour
     private Collider2D _collisionBox;
 
     [SerializeField]
+    private Renderer _renderer;
+
+    [SerializeField]
     private Animator _animator;
 
     [SerializeField]
+>>>>>>> Stashed changes
     private float _moveSpeed = 2f; // move distance per second
 
     [SerializeField]
@@ -25,7 +31,11 @@ public class Character : MonoBehaviour
     [SerializeField]
     private AudioPitchEstimator _audioPitchEstimator;
 
+    private bool _isAlive = true;
     private bool _isGrounded = false;
+
+    public event Action<object> Died;
+    public event Action<object> Resurrected;
 
     private const float JumpPitchThreshold = 200f;
 
@@ -37,9 +47,10 @@ public class Character : MonoBehaviour
             Debug.Log($"Microphone.devices[{i}]: {Microphone.devices[i]}");
         }
 
-        _micAudioSource.clip = Microphone.Start(null, true, 1, 44100);
+        string deviceName = Microphone.devices[1];
+        _micAudioSource.clip = Microphone.Start(deviceName, true, 1, 44100);
 
-        while (!(Microphone.GetPosition(null) > 0)) { }
+        while (!(Microphone.GetPosition(deviceName) > 0)) { }
 
         _micAudioSource.Play();
     }
@@ -54,6 +65,31 @@ public class Character : MonoBehaviour
     private void FixedUpdate()
     {
         _isGrounded = CheckGrounded();
+=======
+    private void Update()
+    {
+        if (_isAlive == false)
+        {
+            return;
+        }
+
+        _animator.SetFloat("Abs(Velocity.x)", Mathf.Abs(_rigidbody2D.velocity.x));
+        _animator.SetFloat("Velocity.y", _rigidbody2D.velocity.y);
+        _animator.SetBool("IsGrounded", _isGrounded);
+    }
+
+    private void FixedUpdate()
+    {
+        if (_isAlive == false)
+        {
+            return;
+        }
+
+        _isGrounded = CheckGrounded();
+
+        float horizontal = Input.GetAxis("Horizontal");
+        float jump = Input.GetAxis("Jump");
+>>>>>>> Stashed changes
 
         float horizontal = Input.GetAxis("Horizontal");
         float jump = Input.GetAxis("Jump");
@@ -88,6 +124,11 @@ public class Character : MonoBehaviour
                 }
             }
         }
+
+        if (transform.position.y < -2f)
+        {
+            Die();
+        }
     }
 
     private void MoveForward()
@@ -108,5 +149,35 @@ public class Character : MonoBehaviour
         int layerMask = LayerMask.GetMask("Terrain");
         RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.down, 0.02f, layerMask);
         return (hit.collider != null);
+    }
+
+    public void Freeze()
+    {
+        _rigidbody2D.velocity = Vector2.zero;
+        _rigidbody2D.isKinematic = true;
+    }
+
+    public void Unfreeze()
+    {
+        _rigidbody2D.velocity = Vector2.zero;
+        _rigidbody2D.isKinematic = false;
+    }
+
+    public void Die()
+    {
+        Freeze();
+
+        _renderer.gameObject.SetActive(false);
+
+        Died?.Invoke(this);
+    }
+
+    public void Resurrect()
+    {
+        Unfreeze();
+
+        _renderer.gameObject.SetActive(true);
+
+        Resurrected?.Invoke(this);
     }
 }
