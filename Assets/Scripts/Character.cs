@@ -19,7 +19,6 @@ public class Character : MonoBehaviour
     private Animator _animator;
 
     [SerializeField]
->>>>>>> Stashed changes
     private float _moveSpeed = 2f; // move distance per second
 
     [SerializeField]
@@ -64,32 +63,12 @@ public class Character : MonoBehaviour
 
     private void FixedUpdate()
     {
-        _isGrounded = CheckGrounded();
-=======
-    private void Update()
-    {
-        if (_isAlive == false)
-        {
-            return;
-        }
-
-        _animator.SetFloat("Abs(Velocity.x)", Mathf.Abs(_rigidbody2D.velocity.x));
-        _animator.SetFloat("Velocity.y", _rigidbody2D.velocity.y);
-        _animator.SetBool("IsGrounded", _isGrounded);
-    }
-
-    private void FixedUpdate()
-    {
         if (_isAlive == false)
         {
             return;
         }
 
         _isGrounded = CheckGrounded();
-
-        float horizontal = Input.GetAxis("Horizontal");
-        float jump = Input.GetAxis("Jump");
->>>>>>> Stashed changes
 
         float horizontal = Input.GetAxis("Horizontal");
         float jump = Input.GetAxis("Jump");
