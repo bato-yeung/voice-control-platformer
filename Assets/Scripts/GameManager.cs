@@ -8,7 +8,10 @@ public class GameManager : MonoSingleton<GameManager>
     private Character _player;
 
     [SerializeField]
-    private Stage _stage;
+    private GameObject _startPoint;
+
+    [SerializeField]
+    private Goal _goal;
 
     [SerializeField]
     private SettingsPanel _settingsPanel;
@@ -16,9 +19,14 @@ public class GameManager : MonoSingleton<GameManager>
     [SerializeField]
     private GameOverPanel _gameOverPanel;
 
+    [SerializeField]
+    private ResultPanel _resultPanel;
+
     private void OnEnable()
     {
         _player.Died += Player_Died;
+        _goal.PlayerEntered += Goal_PlayerEntered;
+
         _settingsPanel.Confirmed += SettingsPanel_Confirmed;
         _gameOverPanel.Clicked += GameOverPanel_Clicked;
     }
@@ -26,6 +34,8 @@ public class GameManager : MonoSingleton<GameManager>
     private void OnDisable()
     {
         _player.Died -= Player_Died;
+        _goal.PlayerEntered -= Goal_PlayerEntered;
+
         _settingsPanel.Confirmed -= SettingsPanel_Confirmed;
         _gameOverPanel.Clicked -= GameOverPanel_Clicked;
     }
@@ -33,6 +43,13 @@ public class GameManager : MonoSingleton<GameManager>
     protected virtual void Player_Died(object sender)
     {
         GameOver();
+    }
+
+    protected virtual void Goal_PlayerEntered(object sender, Character character)
+    {
+        Time.timeScale = 0f;
+
+        _resultPanel.gameObject.SetActive(true);
     }
 
     protected virtual void SettingsPanel_Confirmed(object sender)
@@ -60,7 +77,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void GameStart()
     {
-        _player.transform.position = _stage.StartPoint.transform.position;
+        _player.transform.position = _startPoint.transform.position;
 
         _player.Resurrect();
     }
